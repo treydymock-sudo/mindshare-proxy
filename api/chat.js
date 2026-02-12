@@ -1,31 +1,34 @@
 export default async function handler(req, res) {
-  // === Set CORS headers on EVERY response ===
-  res.setHeader('Access-Control-Allow-Origin', '*'); // or 'https://kaleidoscopic-malabi-28790f.netlify.app' for stricter
+  // Force CORS headers on EVERY response
+  res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.setHeader('Access-Control-Max-Age', '86400'); // Cache preflight for 24 hours
+  res.setHeader('Access-Control-Max-Age', '86400');
 
-  // Handle preflight OPTIONS request (this is what the browser sends first)
+  // Handle preflight OPTIONS request (browser sends this automatically)
   if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+    res.status(200).end();
+    return;
   }
 
-  // Only allow POST after preflight
+  // Normal POST handling
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    res.status(405).json({ error: 'Method not allowed' });
+    return;
   }
 
   const { message, profileSummary } = req.body;
 
   if (!message) {
-    return res.status(400).json({ error: 'Message is required' });
+    res.status(400).json({ error: 'Message is required' });
+    return;
   }
 
   try {
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer gsk_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX`, // YOUR GROQ KEY
+        'Authorization': `Bearer gsk_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX`, // YOUR REAL GROQ KEY
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
