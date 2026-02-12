@@ -1,4 +1,14 @@
 export default async function handler(req, res) {
+  // Add CORS headers
+  res.setHeader('Access-Control-Allow-Origin', '*');           // Allows all origins (for development)
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  // Handle preflight OPTIONS request (required for CORS POST)
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -13,11 +23,11 @@ export default async function handler(req, res) {
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer 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`, // ← YOUR GROQ KEY HERE
+        'Authorization': `Bearer gsk_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX`, // YOUR GROQ KEY
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: "llama-3.1-70b-versatile", // fast & powerful free model
+        model: "llama-3.1-70b-versatile",
         messages: [
           {
             role: "system",
