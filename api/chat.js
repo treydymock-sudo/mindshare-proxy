@@ -1,3 +1,6 @@
+// Force redeploy - added comment
+export default async function handler(req, res) {
+// ... rest of your code
 export default async function handler(req, res) {
   // Force CORS headers on EVERY response
   res.setHeader('Access-Control-Allow-Origin', '*');
